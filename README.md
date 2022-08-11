@@ -5,6 +5,7 @@ RaiseTech 22年05月度 最終課題Spring Boot RestAPIのCRUDアプリ
 ## 概要
 ToDoの登録ができるCRUDアプリになる予定です。</br>
 2022.8.12時点ではREAD機能のみです。
+
 ---
 ## 構成要件
 * Java 17
@@ -14,7 +15,7 @@ ToDoの登録ができるCRUDアプリになる予定です。</br>
 * Docker 20.10.17
 
 ---
-## 機能一覧
+## 機能一覧  (2022.8.12時点)
 * タスク全件取得
 * 特定のタスクを１件取得
 <!-- 
@@ -43,14 +44,15 @@ ToDoの登録ができるCRUDアプリになる予定です。</br>
 | タスク一覧取得     | GET | /todolists      |
 | 特定のタスクを１件取得 | GET | /todolists/{id} |
 
-1. GET /todolists
+### 1. GET /todolists</br>
 ![タスク一覧取得した時のJSON結果](images/01GetAllTask.png)
 
-2. GET /todolists/{id}
+### 2. GET /todolists/{id}</br>
 ![特定のタスクを１件取得した時のJSON結果](images/02GetFindById.png)
 
-3. GET /todolists/{id}で存在しないタスクを指定した時の例外処理
+### 3. GET /todolists/{id}で存在しないタスクを指定した時の例外処理</br>
 ![存在しないタスクを指定した時のJSON結果](images/03GetFindByIdException.png)
+
 ---
 
 ## テスト一覧
