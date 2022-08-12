@@ -41,16 +41,16 @@ ToDoの登録ができるCRUDアプリになる予定です。
 ## URL設計
 | 画面名／機能名     | method | URL          | 
 |-------------| ------------ |-----------------| 
-| タスク一覧取得     | GET | /todolists      |
-| 特定のタスクを１件取得 | GET | /todolists/{id} |
+| タスク一覧取得     | GET | /todos      |
+| 特定のタスクを１件取得 | GET | /todos/{id} |
 
-### 1. GET /todolists  
+### 1. GET /todos  
 ![タスク一覧取得した時のJSON結果](images/01GetAllTask.png)
 
-### 2. GET /todolists/{id}  
+### 2. GET /todos/{id}  
 ![特定のタスクを１件取得した時のJSON結果](images/02GetFindById.png)
 
-### 3. GET /todolists/{id}で存在しないタスクを指定した時の例外処理
+### 3. GET /todos/{id}で存在しないタスクを指定した時の例外処理
 ![存在しないタスクを指定した時のJSON結果](images/03GetFindByIdException.png)
 
 ---

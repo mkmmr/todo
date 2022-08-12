@@ -21,12 +21,12 @@ import java.util.Map;
 public class ToDoController {
     private final ToDoService toDoService;
 
-    @GetMapping("/todolists")
+    @GetMapping("/todos")
     public List<ToDoEntity> getAllTask(){
         return toDoService.findAllTask();
     }
 
-    @GetMapping("/todolists/{id}")
+    @GetMapping("/todos/{id}")
     public ToDoEntity getTaskById(@PathVariable int id){
         return toDoService.findById(id);
     }

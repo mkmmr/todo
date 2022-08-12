@@ -29,7 +29,7 @@ public class UserRestApiIntegrationTest {
     @DataSet(value = "datasets/to_do_list.yml")
     @Transactional
     void タスクを全件取得できること() throws Exception{
-        String response = mockMvc.perform(MockMvcRequestBuilders.get("/todolists"))
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/todos"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -59,7 +59,7 @@ public class UserRestApiIntegrationTest {
     @DataSet(value = "datasets/to_do_list.yml")
     @Transactional
     void 特定のタスクを１件取得できること() throws Exception{
-        String response = mockMvc.perform(MockMvcRequestBuilders.get("/todolists/1"))
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/todos/1"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
