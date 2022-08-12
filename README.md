@@ -3,7 +3,7 @@ RaiseTech 22年05月度 最終課題Spring Boot RestAPIのCRUDアプリ
 
 ---
 ## 概要
-ToDoの登録ができるCRUDアプリになる予定です。</br>
+ToDoの登録ができるCRUDアプリになる予定です。  
 2022.8.12時点ではREAD機能のみです。
 
 ---
@@ -32,7 +32,7 @@ ToDoの登録ができるCRUDアプリになる予定です。</br>
 | カラム名 | データ型 | NotNull | 備考 |
 | ------------ | ------------- | ------------- | ------------- | 
 | id | BIGINT | NOT NULL | ID、主キー |
-| id_done | TINYINT(1) | NOT NULL | TRUE:完了／FALSE:未完了、DEFAULT FALSE |
+| is_done | TINYINT(1) | NOT NULL | TRUE:完了／FALSE:未完了、DEFAULT FALSE |
 | task | VARCHAR(256)  | NOT NULL | タスク内容 |
 | limit_date | DATE |  | 期限 |
 
@@ -44,13 +44,13 @@ ToDoの登録ができるCRUDアプリになる予定です。</br>
 | タスク一覧取得     | GET | /todolists      |
 | 特定のタスクを１件取得 | GET | /todolists/{id} |
 
-### 1. GET /todolists</br>
+### 1. GET /todolists  
 ![タスク一覧取得した時のJSON結果](images/01GetAllTask.png)
 
-### 2. GET /todolists/{id}</br>
+### 2. GET /todolists/{id}  
 ![特定のタスクを１件取得した時のJSON結果](images/02GetFindById.png)
 
-### 3. GET /todolists/{id}で存在しないタスクを指定した時の例外処理</br>
+### 3. GET /todolists/{id}で存在しないタスクを指定した時の例外処理
 ![存在しないタスクを指定した時のJSON結果](images/03GetFindByIdException.png)
 
 ---
