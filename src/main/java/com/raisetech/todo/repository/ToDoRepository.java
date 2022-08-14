@@ -1,5 +1,6 @@
 package com.raisetech.todo.repository;
 
+import com.raisetech.todo.service.ToDoEntity;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
