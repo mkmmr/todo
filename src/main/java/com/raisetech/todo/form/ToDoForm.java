@@ -1,17 +1,24 @@
 package com.raisetech.todo.form;
 
-import lombok.Value;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
-@Value
+@Data
 public class ToDoForm {
 
-    int id;
-    boolean done;
-    String task;
-    LocalDate limitDate;
+    private int id;
+    private boolean done;
+
+    @NotNull
+    @Size(min = 1, max = 256)
+    private String task;
+
+    @NotNull
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate limitDate;
 
 }
