@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class ToDoController{
+public class ToDoController {
     private final ToDoService toDoService;
 
     @GetMapping("/todos")
