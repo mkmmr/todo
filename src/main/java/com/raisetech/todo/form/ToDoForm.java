@@ -10,9 +10,6 @@ import java.time.LocalDate;
 @Data
 public class ToDoForm {
 
-    private int id;
-    private boolean done;
-
     @NotNull
     @Size(min = 1, max = 256)
     private String task;
