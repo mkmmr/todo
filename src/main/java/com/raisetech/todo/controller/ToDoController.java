@@ -4,10 +4,13 @@ import com.raisetech.todo.form.ToDoForm;
 import com.raisetech.todo.service.ToDoEntity;
 import com.raisetech.todo.service.ToDoService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
+import java.util.TimeZone;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,7 +28,8 @@ public class ToDoController {
     }
 
     @PostMapping("/todos")
-    public ToDoEntity create(@Validated @RequestBody ToDoForm toDoForm){
-        return toDoService.create(toDoForm.getTask(), toDoForm.getLimitDate());
+    public ResponseEntity<Object> create(@Validated @RequestBody ToDoForm toDoForm){
+        ToDoEntity toDoEntity = toDoService.create(toDoForm.getTask(), toDoForm.getLimitDate());
+        return ResponseEntity.created(URI.create("/todos/" + toDoEntity.getId())).body(toDoEntity);
     }
 }
