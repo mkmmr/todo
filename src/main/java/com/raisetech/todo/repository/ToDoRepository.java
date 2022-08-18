@@ -19,7 +19,7 @@ public interface ToDoRepository {
     Optional<ToDoEntity> findById(int id);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
-    @Insert("INSERT INTO to_do_list (is_done, task, limit_date) values (0, #{task}, #{limitDate})")
+    @Insert("INSERT INTO to_do_list (is_done, task, limit_date) values (#{done}, #{task}, #{limitDate})")
     void insert(ToDoRecord toDoRecord);
 
 }
