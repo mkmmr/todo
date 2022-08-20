@@ -1,12 +1,12 @@
 package com.raisetech.todo.form;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @Data
 public class ToDoForm {
@@ -16,7 +16,10 @@ public class ToDoForm {
     private String task;
 
     @NotNull
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private LocalDate limitDate;
+    private String limitDate;
 
+    public LocalDate getLimitDate() {
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        return LocalDate.parse(limitDate, dtf);
+    }
 }

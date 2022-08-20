@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +50,18 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
                 "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
                 "message", invalidParam
+        );
+        return ResponseEntity.badRequest().body(body);
+    }
+
+
+    @ExceptionHandler(value = DateTimeParseException.class)
+    public ResponseEntity<Object> handleNotLocalDate(DateTimeParseException e){
+        Map<String, Object> body = Map.of(
+                "timestamp", ZonedDateTime.now().toString(),
+                "status", String.valueOf(HttpStatus.BAD_REQUEST.value()),
+                "error", HttpStatus.BAD_REQUEST.getReasonPhrase(),
+                "message", e.getParsedString()+"は有効ではありません。limitDateは'yyyy-MM-dd'形式で入力してください。"
         );
         return ResponseEntity.badRequest().body(body);
     }
