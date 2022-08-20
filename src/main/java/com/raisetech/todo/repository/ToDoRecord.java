@@ -12,4 +12,7 @@ public class ToDoRecord {
     String task;
     LocalDate limitDate;
 
+    public static ToDoRecord newInstance(String task, LocalDate limitDate) {
+        return new ToDoRecord(null, false, task, limitDate);
+    }
 }

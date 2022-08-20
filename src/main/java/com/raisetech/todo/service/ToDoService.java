@@ -30,9 +30,8 @@ public class ToDoService {
                 .orElseThrow(() -> new ResourceNotFoundException("タスクが存在しません"));
     }
 
-    @Transactional
     public ToDoEntity create(String task, LocalDate limitDate) {
-        var toDoRecord = new ToDoRecord(null, false, task, limitDate);
+        var toDoRecord = ToDoRecord.newInstance(task, limitDate);
         toDoRepository.insert(toDoRecord);
 
         return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
