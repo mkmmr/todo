@@ -30,6 +30,6 @@ public class ToDoService {
         var toDoRecord = ToDoRecord.newInstance(task, limitDate);
         toDoRepository.insert(toDoRecord);
 
-        return new ToDoEntity(toDoRecord.getId(), toDoRecord.newDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
+        return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
     }
 }

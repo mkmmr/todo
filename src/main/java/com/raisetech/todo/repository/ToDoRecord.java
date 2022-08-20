@@ -8,15 +8,11 @@ import java.time.LocalDate;
 public class ToDoRecord {
 
     Integer id;
-    int done;
+    boolean done;
     String task;
     LocalDate limitDate;
 
     public static ToDoRecord newInstance(String task, LocalDate limitDate) {
-        return new ToDoRecord(null, 0, task, limitDate);
-    }
-
-    public boolean newDone() {
-        return false;
+        return new ToDoRecord(null, false, task, limitDate);
     }
 }
