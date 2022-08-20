@@ -17,7 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-public class ToDoController{
+public class ToDoController {
     private final ToDoService toDoService;
 
     @GetMapping("/todos")
@@ -45,7 +45,6 @@ public class ToDoController{
     }
 
     @PostMapping("/todos")
-//    @ResponseStatus(HttpStatus.CREATED)
     public ToDoEntity create(@Validated @RequestBody ToDoForm toDoForm){
         return toDoService.create(toDoForm.getTask(), toDoForm.getLimitDate());
     }
