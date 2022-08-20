@@ -18,11 +18,15 @@ public class ToDoService {
     private final ToDoRepository toDoRepository;
 
     public List<ToDoEntity> findAllTask() {
-        return toDoRepository.findAllTask();
+        return toDoRepository.findAllTask()
+                .stream()
+                .map(toDoRecord -> new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate()))
+                .collect(Collectors.toList());
     }
 
     public ToDoEntity findById(int id) {
         return toDoRepository.findById(id)
+                .map(toDoRecord -> new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate()))
                 .orElseThrow(() -> new ResourceNotFoundException("タスクが存在しません"));
     }
 

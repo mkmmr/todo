@@ -13,10 +13,10 @@ import java.util.Optional;
 public interface ToDoRepository {
 
     @Select("SELECT * From to_do_list")
-    List<ToDoEntity> findAllTask();
+    List<ToDoRecord> findAllTask();
 
     @Select("SELECT * FROM to_do_list WHERE id = #{id}")
-    Optional<ToDoEntity> findById(int id);
+    Optional<ToDoRecord> findById(int id);
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("INSERT INTO to_do_list (is_done, task, limit_date) values (#{done}, #{task}, #{limitDate})")

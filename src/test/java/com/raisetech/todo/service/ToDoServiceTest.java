@@ -1,6 +1,7 @@
 package com.raisetech.todo.service;
 
 import com.raisetech.todo.exception.ResourceNotFoundException;
+import com.raisetech.todo.repository.ToDoRecord;
 import com.raisetech.todo.repository.ToDoRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,22 +29,28 @@ class ToDoServiceTest {
 
     @Test
     void タスク全件を正常に返すこと() {
-        List<ToDoEntity>  allTasks = Arrays.asList(
+        List<ToDoEntity>  allTasksEntity = Arrays.asList(
                 new ToDoEntity(1, false, "Readの実装", LocalDate.of(2022, 8, 10)),
                 new ToDoEntity(2, false, "Createの実装", LocalDate.of(2022, 8, 20)),
                 new ToDoEntity(3, false, "Deleteの実装", LocalDate.of(2022, 8, 30))
         ) ;
-        doReturn(allTasks).when(toDoRepository).findAllTask();
+
+        List<ToDoRecord>  allTasksRecord = Arrays.asList(
+                new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022, 8, 10)),
+                new ToDoRecord(2, false, "Createの実装", LocalDate.of(2022, 8, 20)),
+                new ToDoRecord(3, false, "Deleteの実装", LocalDate.of(2022, 8, 30))
+        ) ;
+        doReturn(allTasksRecord).when(toDoRepository).findAllTask();
 
         List<ToDoEntity> actual = toDoService.findAllTask();
-        assertThat(actual).hasSize(3).isEqualTo(allTasks);
+        assertThat(actual).hasSize(3).isEqualTo(allTasksEntity);
 
         verify(toDoRepository, times(1)).findAllTask();
     }
 
     @Test
     void 存在するタスクのIDを指定したときに正常にタスクが返されること() {
-        doReturn(Optional.of(new ToDoEntity(1, false, "Readの実装", LocalDate.of(2022,8,10))))
+        doReturn(Optional.of(new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022,8,10))))
                 .when(toDoRepository).findById(1);
 
         ToDoEntity actual = toDoService.findById(1);
