@@ -32,6 +32,7 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2'
 	testImplementation 'com.github.database-rider:rider-spring:1.32.3'
+	testImplementation group: 'org.mockito', name: 'mockito-inline', version: '3.12.4'
 }
 
 tasks.named('test') {
