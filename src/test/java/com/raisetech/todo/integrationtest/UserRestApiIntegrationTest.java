@@ -107,7 +107,7 @@ public class UserRestApiIntegrationTest {
         String response = mockMvc
                 .perform(MockMvcRequestBuilders
                         .post("/todos")
-                        .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{}"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -134,7 +134,7 @@ public class UserRestApiIntegrationTest {
         String response = mockMvc
                 .perform(MockMvcRequestBuilders
                         .post("/todos")
-                        .contentType(MediaType.APPLICATION_PROBLEM_JSON)
+                        .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "    \"task\": \"Updateの実装\"," +
                                 "    \"limitDate\": \"2022-8-25\"" +
