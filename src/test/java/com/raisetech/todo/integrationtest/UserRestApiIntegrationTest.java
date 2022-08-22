@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -108,7 +109,8 @@ public class UserRestApiIntegrationTest {
                 .perform(MockMvcRequestBuilders
                         .post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content("{}"))
+                        .content("{}")
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP"))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
@@ -117,8 +119,8 @@ public class UserRestApiIntegrationTest {
                 "    \"status\": \"400\"," +
                 "    \"timestamp\": \"\"," +
                 "    \"message\": {" +
-                "        \"task\": \"must not be blank\"," +
-                "        \"limitDate\": \"must not be null\"" +
+                "        \"task\": \"空白は許可されていません\"," +
+                "        \"limitDate\": \"null は許可されていません\"" +
                 "    }" +
                 "}";
 
