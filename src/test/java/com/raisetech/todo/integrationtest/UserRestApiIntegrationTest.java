@@ -80,6 +80,27 @@ public class UserRestApiIntegrationTest {
     @Test
     @DataSet(value = "datasets/to_do_list.yml")
     @Transactional
+    void 存在しないタスクIDを指定した時にNotFoundが返ってくること() throws Exception{
+        String response = mockMvc.perform(MockMvcRequestBuilders.get("/todos/99"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        String expected = "{" +
+                "    \"error\": \"Not Found\"," +
+                "    \"status\": \"404\"," +
+                "    \"timestamp\": \"\"," +
+                "    \"path\": \"/todos/99\"," +
+                "    \"message\": \"タスクが存在しません\"" +
+                "}";
+
+        JSONAssert.assertEquals(expected, response,
+                new CustomComparator(JSONCompareMode.STRICT,
+                        new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
     void 新規作成できること() throws Exception{
         String response = mockMvc
                 .perform(MockMvcRequestBuilders
@@ -227,6 +248,33 @@ public class UserRestApiIntegrationTest {
                 "    \"status\": \"400\"," +
                 "    \"timestamp\": \"\"," +
                 "    \"message\": \"aaaaは有効ではありません。limitDateは'yyyy-MM-dd'形式で入力してください。\"" +
+                "}";
+
+        JSONAssert.assertEquals(expected, response,
+                new CustomComparator(JSONCompareMode.STRICT,
+                        new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void 存在しないタスクIDを変更しようとした時にNotFoundが返ってくること() throws Exception{
+        String response = mockMvc.perform(MockMvcRequestBuilders
+                        .patch("/todos/99")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "    \"task\": \"Updateの実装\"," +
+                                "    \"limitDate\": \"2022-08-25\"" +
+                                "}"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        String expected = "{" +
+                "    \"error\": \"Not Found\"," +
+                "    \"status\": \"404\"," +
+                "    \"timestamp\": \"\"," +
+                "    \"path\": \"/todos/99\"," +
+                "    \"message\": \"タスク (id = 99) は存在しません\"" +
                 "}";
 
         JSONAssert.assertEquals(expected, response,
