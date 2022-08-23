@@ -29,9 +29,6 @@ class ToDoServiceTest {
     @Mock
     ToDoRepository toDoRepository;
 
-    @Mock
-    ToDoRecord toDoRecord;
-
     @Test
     void タスク全件を正常に返すこと() {
         List<ToDoEntity>  allTasksEntity = Arrays.asList(
