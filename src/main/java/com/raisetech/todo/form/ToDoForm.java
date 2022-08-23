@@ -3,7 +3,6 @@ package com.raisetech.todo.form;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,7 +14,7 @@ public class ToDoForm {
     @Size(min = 1, max = 256)
     private String task;
 
-    @NotNull
+    @NotBlank
     private String limitDate;
 
     public LocalDate getLimitDate() {

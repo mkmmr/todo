@@ -120,7 +120,7 @@ public class UserRestApiIntegrationTest {
                 "    \"timestamp\": \"\"," +
                 "    \"message\": {" +
                 "        \"task\": \"空白は許可されていません\"," +
-                "        \"limitDate\": \"null は許可されていません\"" +
+                "        \"limitDate\": \"空白は許可されていません\"" +
                 "    }" +
                 "}";
 
