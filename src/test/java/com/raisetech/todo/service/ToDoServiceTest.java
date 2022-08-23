@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
@@ -26,6 +28,9 @@ class ToDoServiceTest {
 
     @Mock
     ToDoRepository toDoRepository;
+
+    @Mock
+    ToDoRecord toDoRecord;
 
     @Test
     void タスク全件を正常に返すこと() {
@@ -65,5 +70,20 @@ class ToDoServiceTest {
         assertThrows(ResourceNotFoundException.class, ()-> toDoService.findById(1) );
 
         verify(toDoRepository, times(1)).findById(anyInt());
+    }
+
+    @Test
+    void 新規タスクを追加できること() {
+        try (MockedStatic<ToDoRecord> toDoRecordMockedStatic = Mockito.mockStatic(ToDoRecord.class)) {
+            toDoRecordMockedStatic
+                    .when(() -> ToDoRecord.newInstance("Updateの実装", LocalDate.of(2022, 8, 25)))
+                    .thenReturn(new ToDoRecord(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+            doNothing().when(toDoRepository).insert(any());
+
+            ToDoEntity actual = toDoService.create("Updateの実装", LocalDate.of(2022, 8, 25));
+            assertThat(actual).isEqualTo(new ToDoEntity(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+
+            verify(toDoRepository, times(1)).insert(any());
+        }
     }
 }

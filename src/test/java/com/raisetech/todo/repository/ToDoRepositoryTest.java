@@ -1,6 +1,7 @@
 package com.raisetech.todo.repository;
 
 import com.github.database.rider.core.api.dataset.DataSet;
+import com.github.database.rider.core.api.dataset.ExpectedDataSet;
 import com.github.database.rider.spring.api.DBRider;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -42,5 +43,13 @@ class ToDoRepositoryTest {
     void IDを指定して特定のタスク情報が取得できること() {
         Optional<ToDoRecord> actual = toDoRepository.findById(1);
         assertThat(actual).isEqualTo(Optional.of(new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022, 8, 10))));
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @ExpectedDataSet(value = "datasets/expected_insert_to_do_list.yml", ignoreCols = "id")
+    void タスクを新規登録できること() {
+                assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
+                toDoRepository.insert(new ToDoRecord(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
     }
 }
