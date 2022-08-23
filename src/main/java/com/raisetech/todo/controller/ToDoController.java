@@ -30,14 +30,24 @@ public class ToDoController {
     }
 
     @PostMapping("/todos")
-    public ResponseEntity<Object> create(@Validated @RequestBody ToDoForm toDoForm){
+    public ResponseEntity<ToDoResponse> create(@Validated @RequestBody ToDoForm toDoForm){
         ToDoEntity toDoEntity = toDoService.create(toDoForm.getTask(), toDoForm.getLimitDate());
-        return ResponseEntity.created(URI.create("/todos/" + toDoEntity.getId())).body(toDoEntity);
+        ToDoResponse toDoResponse = new ToDoResponse();
+        toDoResponse.setId(toDoEntity.getId());
+        toDoResponse.setDone(toDoEntity.isDone());
+        toDoResponse.setTask(toDoEntity.getTask());
+        toDoResponse.setLimitDate(toDoEntity.getLimitDate());
+        return ResponseEntity.created(URI.create("/todos/" + toDoEntity.getId())).body(toDoResponse);
     }
 
     @PatchMapping("/todos/{id}")
-    public ResponseEntity<Object> edit(@PathVariable("id") int id, @Validated @RequestBody ToDoUpdateForm updateForm){
+    public ResponseEntity<ToDoResponse> edit(@PathVariable("id") int id, @Validated @RequestBody ToDoUpdateForm updateForm){
         ToDoEntity toDoEntity = toDoService.update(id, updateForm.getTask(), updateForm.getLimitDate());
-        return ResponseEntity.ok(toDoEntity);
+        ToDoResponse toDoResponse = new ToDoResponse();
+        toDoResponse.setId(toDoEntity.getId());
+        toDoResponse.setDone(toDoEntity.isDone());
+        toDoResponse.setTask(toDoEntity.getTask());
+        toDoResponse.setLimitDate(toDoEntity.getLimitDate());
+        return ResponseEntity.ok(toDoResponse);
     }
 }
