@@ -52,4 +52,12 @@ class ToDoRepositoryTest {
                 assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
                 toDoRepository.insert(new ToDoRecord(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
     }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @ExpectedDataSet(value = "datasets/expected_update_to_do_list.yml", ignoreCols = "id")
+    void タスクを変更できること() {
+        assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
+        toDoRepository.update(new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+    }
 }
