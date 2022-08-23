@@ -83,4 +83,26 @@ class ToDoServiceTest {
             verify(toDoRepository, times(1)).insert(any());
         }
     }
+
+    @Test
+    void タスクを変更できること() {
+        ToDoRecord excepted = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,25));
+
+        doReturn(Optional.of(excepted)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3,"Updateの実装", LocalDate.of(2022, 8, 25));
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void 存在しないタスクを変更しようとしたときに正常に例外が投げられていること() {
+        doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
+        assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, "Updateの実装", LocalDate.of(2022, 8, 30)) );
+
+        verify(toDoRepository, times(1)).findById(anyInt());
+    }
 }
