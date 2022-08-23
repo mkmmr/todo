@@ -5,7 +5,6 @@ import com.raisetech.todo.repository.ToDoRecord;
 import com.raisetech.todo.repository.ToDoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,5 +34,12 @@ public class ToDoService {
         toDoRepository.insert(toDoRecord);
 
         return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
+    }
+
+    public ToDoEntity update(int id, String task, LocalDate limitDate) {
+        toDoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
+        toDoRepository.update(ToDoRecord.valueOf(id, task, limitDate));
+        return findById(id);
     }
 }

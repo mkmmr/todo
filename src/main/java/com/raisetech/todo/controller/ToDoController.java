@@ -1,6 +1,7 @@
 package com.raisetech.todo.controller;
 
 import com.raisetech.todo.form.ToDoForm;
+import com.raisetech.todo.form.ToDoUpdateForm;
 import com.raisetech.todo.service.ToDoEntity;
 import com.raisetech.todo.service.ToDoService;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 import java.util.TimeZone;
 
 @RestController
@@ -31,5 +33,11 @@ public class ToDoController {
     public ResponseEntity<Object> create(@Validated @RequestBody ToDoForm toDoForm){
         ToDoEntity toDoEntity = toDoService.create(toDoForm.getTask(), toDoForm.getLimitDate());
         return ResponseEntity.created(URI.create("/todos/" + toDoEntity.getId())).body(toDoEntity);
+    }
+
+    @PatchMapping("/todos/{id}")
+    public ResponseEntity<Object> edit(@PathVariable("id") int id, @Validated @RequestBody ToDoUpdateForm updateForm){
+        ToDoEntity toDoEntity = toDoService.update(id, updateForm.getTask(), updateForm.getLimitDate());
+        return ResponseEntity.ok(toDoEntity);
     }
 }
