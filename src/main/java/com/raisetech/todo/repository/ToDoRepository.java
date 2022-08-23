@@ -19,6 +19,6 @@ public interface ToDoRepository {
     @Insert("INSERT INTO to_do_list (is_done, task, limit_date) values (#{done}, #{task}, #{limitDate})")
     void insert(ToDoRecord toDoRecord);
 
-    @Update("UPDATE to_do_list set task = #{task}, limit_date = #{limitDate} where id = #{id}")
+    @Update("UPDATE to_do_list SET task = #{task}, limit_date = #{limitDate} WHERE id = #{id}")
     void update(ToDoRecord toDoRecord);
 }
