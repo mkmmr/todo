@@ -155,4 +155,82 @@ public class UserRestApiIntegrationTest {
                 new CustomComparator(JSONCompareMode.STRICT,
                         new Customization("timestamp", ((o1, o2) -> true))));
     }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void タスクを変更できること() throws Exception{
+        String response = mockMvc
+                .perform(MockMvcRequestBuilders
+                        .patch("/todos/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "    \"task\": \"Updateの実装\"," +
+                                "    \"limitDate\": \"2022-08-25\"" +
+                                "}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        JSONAssert.assertEquals("{" +
+                "    \"id\": 3," +
+                "    \"done\": false," +
+                "    \"task\": \"Updateの実装\"," +
+                "    \"limitDate\": \"2022-08-25\"" +
+                "}", response, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void nullにタスク変更しようとした時にBadRequestが返ってくること() throws Exception{
+        String response = mockMvc
+                .perform(MockMvcRequestBuilders
+                        .patch("/todos/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}")
+                        .header(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        String expected = "{" +
+                "    \"error\": \"Bad Request\"," +
+                "    \"status\": \"400\"," +
+                "    \"timestamp\": \"\"," +
+                "    \"message\": {" +
+                "        \"task\": \"空白は許可されていません\"," +
+                "        \"limitDate\": \"空白は許可されていません\"" +
+                "    }" +
+                "}";
+
+        JSONAssert.assertEquals(expected, response,
+                new CustomComparator(JSONCompareMode.STRICT,
+                        new Customization("timestamp", ((o1, o2) -> true))));
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void limitDateに有効な型以外に変更しようとした時にBadRequestが返ってくること() throws Exception{
+        String response = mockMvc
+                .perform(MockMvcRequestBuilders
+                        .patch("/todos/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "    \"task\": \"Updateの実装\"," +
+                                "    \"limitDate\": \"aaaa\"" +
+                                "}"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        String expected = "{" +
+                "    \"error\": \"Bad Request\"," +
+                "    \"status\": \"400\"," +
+                "    \"timestamp\": \"\"," +
+                "    \"message\": \"aaaaは有効ではありません。limitDateは'yyyy-MM-dd'形式で入力してください。\"" +
+                "}";
+
+        JSONAssert.assertEquals(expected, response,
+                new CustomComparator(JSONCompareMode.STRICT,
+                        new Customization("timestamp", ((o1, o2) -> true))));
+    }
 }
