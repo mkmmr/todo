@@ -86,12 +86,12 @@ class ToDoServiceTest {
 
     @Test
     void タスクを変更できること() {
-        ToDoRecord excepted = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,25));
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,25));
         try (MockedStatic<ToDoRecord> toDoRecordMockedStatic = Mockito.mockStatic(ToDoRecord.class)) {
             toDoRecordMockedStatic
                     .when(() -> ToDoRecord.valueOf(3, "Updateの実装", LocalDate.of(2022, 8, 25)))
-                    .thenReturn(excepted);
-            doReturn(Optional.of(excepted)).when(toDoRepository).findById(3);
+                    .thenReturn(toDoRecordMock);
+            doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
             doNothing().when(toDoRepository).update(any());
 
             ToDoEntity actual = toDoService.update(3, "Updateの実装", LocalDate.of(2022, 8, 25));
