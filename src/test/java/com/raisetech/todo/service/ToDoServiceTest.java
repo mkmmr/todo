@@ -29,9 +29,6 @@ class ToDoServiceTest {
     @Mock
     ToDoRepository toDoRepository;
 
-    @Mock
-    ToDoRecord toDoRecord;
-
     @Test
     void タスク全件を正常に返すこと() {
         List<ToDoEntity>  allTasksEntity = Arrays.asList(
@@ -67,7 +64,8 @@ class ToDoServiceTest {
     @Test
     void 存在しないタスクのIDを指定したときに正常に例外が投げられていること() {
         doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
-        assertThrows(ResourceNotFoundException.class, ()-> toDoService.findById(1) );
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.findById(1));
+        assertThat(e.getMessage()).isEqualTo("タスクが存在しません");
 
         verify(toDoRepository, times(1)).findById(anyInt());
     }
@@ -85,5 +83,32 @@ class ToDoServiceTest {
 
             verify(toDoRepository, times(1)).insert(any());
         }
+    }
+
+    @Test
+    void タスクを変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,25));
+        try (MockedStatic<ToDoRecord> toDoRecordMockedStatic = Mockito.mockStatic(ToDoRecord.class)) {
+            toDoRecordMockedStatic
+                    .when(() -> ToDoRecord.valueOf(3, "Updateの実装", LocalDate.of(2022, 8, 25)))
+                    .thenReturn(toDoRecordMock);
+            doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+            doNothing().when(toDoRepository).update(any());
+
+            ToDoEntity actual = toDoService.update(3, "Updateの実装", LocalDate.of(2022, 8, 25));
+            assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+
+            verify(toDoRepository, times(1)).findById(anyInt());
+            verify(toDoRepository, times(1)).update(any());
+        }
+    }
+
+    @Test
+    void 存在しないタスクを変更しようとしたときに正常に例外が投げられていること() {
+        doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, "Updateの実装", LocalDate.of(2022, 8, 30)) );
+        assertThat(e.getMessage()).isEqualTo("タスク (id = 4) は存在しません");
+
+        verify(toDoRepository, times(1)).findById(anyInt());
     }
 }
