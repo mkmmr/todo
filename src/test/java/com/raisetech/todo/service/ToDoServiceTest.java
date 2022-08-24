@@ -64,7 +64,8 @@ class ToDoServiceTest {
     @Test
     void 存在しないタスクのIDを指定したときに正常に例外が投げられていること() {
         doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
-        assertThrows(ResourceNotFoundException.class, ()-> toDoService.findById(1) );
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.findById(1));
+        assertThat(e.getMessage()).isEqualTo("タスクが存在しません");
 
         verify(toDoRepository, times(1)).findById(anyInt());
     }
@@ -105,7 +106,8 @@ class ToDoServiceTest {
     @Test
     void 存在しないタスクを変更しようとしたときに正常に例外が投げられていること() {
         doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
-        assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, "Updateの実装", LocalDate.of(2022, 8, 30)) );
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, "Updateの実装", LocalDate.of(2022, 8, 30)) );
+        assertThat(e.getMessage()).isEqualTo("タスク (id = 4) は存在しません");
 
         verify(toDoRepository, times(1)).findById(anyInt());
     }
