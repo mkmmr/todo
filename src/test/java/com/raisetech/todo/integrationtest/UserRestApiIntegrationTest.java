@@ -150,7 +150,7 @@ public class UserRestApiIntegrationTest {
                     "    \"timestamp\": \"2022-08-24T00:00+09:00[Asia/Tokyo]\"," +
                     "    \"message\": {" +
                     "        \"task\": \"空白は許可されていません\"," +
-                    "        \"limitDate\": \"null は許可されていません\"" +
+                    "        \"limitDate\": \"空白は許可されていません\"" +
                     "    }" +
                     "}";
 
