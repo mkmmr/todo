@@ -5,10 +5,10 @@ import com.raisetech.todo.repository.ToDoRecord;
 import com.raisetech.todo.repository.ToDoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,6 +34,14 @@ public class ToDoService {
         var toDoRecord = ToDoRecord.newInstance(task, limitDate);
         toDoRepository.insert(toDoRecord);
 
+        return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
+    }
+
+    public ToDoEntity update(int id, String task, LocalDate limitDate) {
+        toDoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
+        var toDoRecord = ToDoRecord.valueOf(id, task, limitDate);
+        toDoRepository.update(toDoRecord);
         return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
     }
 }
