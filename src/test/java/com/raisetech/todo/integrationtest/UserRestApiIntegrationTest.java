@@ -196,6 +196,7 @@ public class UserRestApiIntegrationTest {
                         .patch("/todos/3")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
+                                "    \"done\": true," +
                                 "    \"task\": \"Updateの実装\"," +
                                 "    \"limitDate\": \"2022-08-25\"" +
                                 "}"))
@@ -204,7 +205,7 @@ public class UserRestApiIntegrationTest {
 
         JSONAssert.assertEquals("{" +
                 "    \"id\": 3," +
-                "    \"done\": false," +
+                "    \"done\": true," +
                 "    \"task\": \"Updateの実装\"," +
                 "    \"limitDate\": \"2022-08-25\"" +
                 "}", response, JSONCompareMode.STRICT);
@@ -213,31 +214,43 @@ public class UserRestApiIntegrationTest {
     @Test
     @DataSet(value = "datasets/to_do_list.yml")
     @Transactional
-    void nullにタスク変更しようとした時にBadRequestが返ってくること() throws Exception{
-        try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)) {
-            zonedDateTimeMockedStatic.when(ZonedDateTime::now).thenReturn(zonedDateTime);
+    void 入力した項目だけ部分更新されてnullなら更新されないこと() throws Exception{
+        String response = mockMvc
+                .perform(MockMvcRequestBuilders
+                        .patch("/todos/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{" +
+                                "    \"done\": true" +
+                                "}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-            String response = mockMvc
-                    .perform(MockMvcRequestBuilders
-                            .patch("/todos/3")
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content("{}")
-                            .header(HttpHeaders.ACCEPT_LANGUAGE, "ja-JP"))
-                    .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+        JSONAssert.assertEquals("{" +
+                "    \"id\": 3," +
+                "    \"done\": true," +
+                "    \"task\": \"Deleteの実装\"," +
+                "    \"limitDate\": \"2022-08-30\"" +
+                "}", response, JSONCompareMode.STRICT);
+    }
 
-            String expected = "{" +
-                    "    \"error\": \"Bad Request\"," +
-                    "    \"status\": \"400\"," +
-                    "    \"timestamp\": \"2022-08-24T00:00+09:00[Asia/Tokyo]\"," +
-                    "    \"message\": {" +
-                    "        \"task\": \"空白は許可されていません\"," +
-                    "        \"limitDate\": \"空白は許可されていません\"" +
-                    "    }" +
-                    "}";
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void 全ての項目をnullでPATCHした時に何も更新されていないこと() throws Exception{
+        String response = mockMvc
+                .perform(MockMvcRequestBuilders
+                        .patch("/todos/3")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{}"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
-            JSONAssert.assertEquals(expected, response, JSONCompareMode.STRICT);
-        }
+        JSONAssert.assertEquals("{" +
+                "    \"id\": 3," +
+                "    \"done\": false," +
+                "    \"task\": \"Deleteの実装\"," +
+                "    \"limitDate\": \"2022-08-30\"" +
+                "}", response, JSONCompareMode.STRICT);
     }
 
     @Test
