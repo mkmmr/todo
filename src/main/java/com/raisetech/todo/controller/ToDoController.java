@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import java.util.TimeZone;
 
 @RestController
 @RequiredArgsConstructor
@@ -38,8 +36,8 @@ public class ToDoController {
 
     @PatchMapping("/todos/{id}")
     public ResponseEntity<ToDoResponse> edit(@PathVariable("id") int id, @Validated @RequestBody ToDoUpdateForm updateForm){
-        ToDoEntity toDoEntity = toDoService.update(id, updateForm.getTask(), updateForm.getLimitDate());
-        ToDoResponse toDoResponse = new ToDoResponse(toDoEntity.getId(), toDoEntity.isDone(), toDoEntity.getTask(), toDoEntity.getLimitDate());
+        ToDoEntity toDoEntity = toDoService.update(id, updateForm.isDone(), updateForm.getTask(), updateForm.getLimitDate());
+        ToDoResponse toDoResponse = new ToDoResponse(id, toDoEntity.isDone(), toDoEntity.getTask(), toDoEntity.getLimitDate());
         return ResponseEntity.ok(toDoResponse);
     }
 }

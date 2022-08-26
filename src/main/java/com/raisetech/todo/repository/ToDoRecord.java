@@ -15,8 +15,4 @@ public class ToDoRecord {
     public static ToDoRecord newInstance(String task, LocalDate limitDate) {
         return new ToDoRecord(null, false, task, limitDate);
     }
-
-    public static ToDoRecord valueOf(int id, String task, LocalDate limitDate) {
-        return new ToDoRecord(id, false , task, limitDate);
-    }
 }
