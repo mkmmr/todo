@@ -87,26 +87,36 @@ class ToDoServiceTest {
 
     @Test
     void タスクを変更できること() {
-        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,25));
-        try (MockedStatic<ToDoRecord> toDoRecordMockedStatic = Mockito.mockStatic(ToDoRecord.class)) {
-            toDoRecordMockedStatic
-                    .when(() -> ToDoRecord.valueOf(3, "Updateの実装", LocalDate.of(2022, 8, 25)))
-                    .thenReturn(toDoRecordMock);
-            doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
-            doNothing().when(toDoRepository).update(any());
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, true, "Updateの実装", LocalDate.of(2022,8,25));
 
-            ToDoEntity actual = toDoService.update(3, "Updateの実装", LocalDate.of(2022, 8, 25));
-            assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
 
-            verify(toDoRepository, times(1)).findById(anyInt());
-            verify(toDoRepository, times(1)).update(any());
-        }
+        ToDoEntity actual = toDoService.update(3, true, "Updateの実装", LocalDate.of(2022, 8, 25));
+        assertThat(actual).isEqualTo(new ToDoEntity(3, true, "Updateの実装", LocalDate.of(2022, 8, 25)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void nullがあっても部分的にタスクを変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, true, "Updateの実装", LocalDate.of(2022,8,30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, true, null, null);
+        assertThat(actual).isEqualTo(new ToDoEntity(3, true, "Updateの実装", LocalDate.of(2022, 8, 30)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
     }
 
     @Test
     void 存在しないタスクを変更しようとしたときに正常に例外が投げられていること() {
         doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
-        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, "Updateの実装", LocalDate.of(2022, 8, 30)) );
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, true, "Updateの実装", LocalDate.of(2022, 8, 30)) );
         assertThat(e.getMessage()).isEqualTo("タスク (id = 4) は存在しません");
 
         verify(toDoRepository, times(1)).findById(anyInt());
