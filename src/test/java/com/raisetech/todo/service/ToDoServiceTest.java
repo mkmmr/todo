@@ -100,7 +100,7 @@ class ToDoServiceTest {
     }
 
     @Test
-    void nullがあっても部分的にタスクを変更できること() {
+    void done以外がnullの時にdoneだけ部分的に変更できること() {
         ToDoRecord toDoRecordMock = new ToDoRecord(3, true, "Updateの実装", LocalDate.of(2022,8,30));
 
         doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
@@ -110,6 +110,48 @@ class ToDoServiceTest {
         assertThat(actual).isEqualTo(new ToDoEntity(3, true, "Updateの実装", LocalDate.of(2022, 8, 30)));
 
         verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void task以外がnullの時にtaskだけ部分的に変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, null, "Updateの実装", null);
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 30)));
+
+        verify(toDoRepository, times(3)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void limitDate以外がnullの時にlimitdateだけ部分的に変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, null, null, LocalDate.of(2022,8,30));
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 30)));
+
+        verify(toDoRepository, times(3)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void 部分更新で全ての値がnullの時に何も変更しないこと() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, null, null, null);
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 30)));
+
+        verify(toDoRepository, times(3)).findById(anyInt());
         verify(toDoRepository, times(1)).update(any());
     }
 
