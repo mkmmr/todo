@@ -123,7 +123,7 @@ class ToDoServiceTest {
         ToDoEntity actual = toDoService.update(3, null, "テスト用タスク３変更", null);
         assertThat(actual).isEqualTo(new ToDoEntity(3, false, "テスト用タスク３変更", LocalDate.of(2022, 8, 30)));
 
-        verify(toDoRepository, times(3)).findById(anyInt());
+        verify(toDoRepository, times(2)).findById(anyInt());
         verify(toDoRepository, times(1)).update(any());
     }
 
@@ -137,7 +137,7 @@ class ToDoServiceTest {
         ToDoEntity actual = toDoService.update(3, null, null, LocalDate.of(2022,9, 30));
         assertThat(actual).isEqualTo(new ToDoEntity(3, false, "テスト用タスク３", LocalDate.of(2022, 9, 30)));
 
-        verify(toDoRepository, times(3)).findById(anyInt());
+        verify(toDoRepository, times(2)).findById(anyInt());
         verify(toDoRepository, times(1)).update(any());
     }
 
@@ -151,7 +151,7 @@ class ToDoServiceTest {
         ToDoEntity actual = toDoService.update(3, null, null, null);
         assertThat(actual).isEqualTo(new ToDoEntity(3, false, "テスト用タスク３", LocalDate.of(2022, 8, 30)));
 
-        verify(toDoRepository, times(3)).findById(anyInt());
+        verify(toDoRepository, times(2)).findById(anyInt());
         verify(toDoRepository, times(1)).update(any());
     }
 

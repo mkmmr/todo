@@ -38,12 +38,11 @@ public class ToDoService {
     }
 
     public ToDoEntity update(int id, Boolean done, String task, LocalDate limitDate) {
-        toDoRepository.findById(id)
+        ToDoRecord nowToDoRecord = toDoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
 
         if (done == null) {
-            Optional<ToDoRecord> nowToDoRecord = toDoRepository.findById(id);
-            done = nowToDoRecord.get().isDone();
+            done = nowToDoRecord.isDone();
         }
 
         var toDoRecord = new ToDoRecord(id, done, task, limitDate);
