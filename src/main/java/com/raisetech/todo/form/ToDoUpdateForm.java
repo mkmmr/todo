@@ -2,7 +2,7 @@ package com.raisetech.todo.form;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
@@ -10,10 +10,10 @@ import java.time.format.DateTimeFormatter;
 
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @AllArgsConstructor
-@Data
+@Value
 public class ToDoUpdateForm {
 
-    boolean done;
+    Boolean done;
 
     @Size(min = 1, max = 256)
     private String task;

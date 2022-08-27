@@ -8,7 +8,7 @@ import java.time.LocalDate;
 public class ToDoEntity {
 
     int id;
-    boolean done;
+    Boolean done;
     String task;
     LocalDate limitDate;
 

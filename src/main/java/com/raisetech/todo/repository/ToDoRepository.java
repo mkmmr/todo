@@ -20,17 +20,15 @@ public interface ToDoRepository {
 
     @Update("UPDATE to_do_list " +
             "SET " +
-                "is_done = CASE " +
-                        "WHEN #{done} IS NOT NULL " +
-                        "THEN #{done} " +
-                        "ELSE is_done " +
-                    "END, " +
-                "task = CASE " +
+                "is_done = #{done}, " +
+                "task = " +
+                    "CASE " +
                         "WHEN #{task} IS NOT NULL " +
                         "THEN #{task} " +
                         "ELSE task " +
                     "END, " +
-                "limit_date = CASE " +
+                "limit_date = " +
+                    "CASE " +
                         "WHEN #{limitDate} IS NOT NULL " +
                         "THEN #{limitDate} " +
                         "ELSE limit_date " +

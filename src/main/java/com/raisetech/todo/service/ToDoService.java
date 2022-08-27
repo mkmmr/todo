@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +37,15 @@ public class ToDoService {
         return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
     }
 
-    public ToDoEntity update(int id, boolean done, String task, LocalDate limitDate) {
+    public ToDoEntity update(int id, Boolean done, String task, LocalDate limitDate) {
         toDoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
+
+        if (done == null) {
+            Optional<ToDoRecord> nowToDoRecord = toDoRepository.findById(id);
+            done = nowToDoRecord.get().isDone();
+        }
+
         var toDoRecord = new ToDoRecord(id, done, task, limitDate);
         toDoRepository.update(toDoRecord);
         return toDoRepository.findById(id)
