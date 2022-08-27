@@ -47,19 +47,19 @@ public class UserRestApiIntegrationTest {
                 "    {" +
                 "        \"id\": 1," +
                 "        \"done\": false," +
-                "        \"task\": \"Readの実装\"," +
+                "        \"task\": \"テスト用タスク１\"," +
                 "        \"limitDate\": \"2022-08-10\"" +
                 "    }," +
                 "    {" +
                 "        \"id\": 2," +
                 "        \"done\": false," +
-                "        \"task\": \"Createの実装\"," +
+                "        \"task\": \"テスト用タスク２\"," +
                 "        \"limitDate\": \"2022-08-20\"" +
                 "    }," +
                 "    {" +
                 "        \"id\": 3," +
                 "        \"done\": false," +
-                "        \"task\": \"Deleteの実装\"," +
+                "        \"task\": \"テスト用タスク３\"," +
                 "        \"limitDate\": \"2022-08-30\"" +
                 "    }" +
                 "]", response, JSONCompareMode.STRICT);
@@ -76,7 +76,7 @@ public class UserRestApiIntegrationTest {
         JSONAssert.assertEquals("{" +
                 "    \"id\": 1," +
                 "    \"done\": false," +
-                "    \"task\": \"Readの実装\"," +
+                "    \"task\": \"テスト用タスク１\"," +
                 "    \"limitDate\": \"2022-08-10\"" +
                 "}", response, JSONCompareMode.STRICT);
     }
@@ -113,8 +113,8 @@ public class UserRestApiIntegrationTest {
                         .post("/todos")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
-                                "    \"task\": \"Updateの実装\"," +
-                                "    \"limitDate\": \"2022-08-25\"" +
+                                "    \"task\": \"テスト用タスク４\"," +
+                                "    \"limitDate\": \"2022-09-01\"" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(header().string("Location", "/todos/4"))
@@ -123,8 +123,8 @@ public class UserRestApiIntegrationTest {
         JSONAssert.assertEquals("{" +
                 "    \"id\": 4," +
                 "    \"done\": false," +
-                "    \"task\": \"Updateの実装\"," +
-                "    \"limitDate\": \"2022-08-25\"" +
+                "    \"task\": \"テスト用タスク４\"," +
+                "    \"limitDate\": \"2022-09-01\"" +
                 "}", response, JSONCompareMode.STRICT);
     }
 
@@ -170,8 +170,8 @@ public class UserRestApiIntegrationTest {
                             .post("/todos")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{" +
-                                    "    \"task\": \"Updateの実装\"," +
-                                    "    \"limitDate\": \"2022-8-25\"" +
+                                    "    \"task\": \"テスト用タスク４\"," +
+                                    "    \"limitDate\": \"2022-9-1\"" +
                                     "}"))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -180,7 +180,7 @@ public class UserRestApiIntegrationTest {
                     "    \"error\": \"Bad Request\"," +
                     "    \"status\": \"400\"," +
                     "    \"timestamp\": \"2022-08-24T00:00+09:00[Asia/Tokyo]\"," +
-                    "    \"message\": \"2022-8-25は有効ではありません。limitDateは'yyyy-MM-dd'形式で入力してください。\"" +
+                    "    \"message\": \"2022-9-1は有効ではありません。limitDateは'yyyy-MM-dd'形式で入力してください。\"" +
                     "}";
 
             JSONAssert.assertEquals(expected, response, JSONCompareMode.STRICT);
@@ -197,8 +197,8 @@ public class UserRestApiIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{" +
                                 "    \"done\": true," +
-                                "    \"task\": \"Updateの実装\"," +
-                                "    \"limitDate\": \"2022-08-25\"" +
+                                "    \"task\": \"テスト用タスク３変更\"," +
+                                "    \"limitDate\": \"2022-09-30\"" +
                                 "}"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
@@ -206,8 +206,8 @@ public class UserRestApiIntegrationTest {
         JSONAssert.assertEquals("{" +
                 "    \"id\": 3," +
                 "    \"done\": true," +
-                "    \"task\": \"Updateの実装\"," +
-                "    \"limitDate\": \"2022-08-25\"" +
+                "    \"task\": \"テスト用タスク３変更\"," +
+                "    \"limitDate\": \"2022-09-30\"" +
                 "}", response, JSONCompareMode.STRICT);
     }
 
@@ -228,7 +228,7 @@ public class UserRestApiIntegrationTest {
         JSONAssert.assertEquals("{" +
                 "    \"id\": 3," +
                 "    \"done\": true," +
-                "    \"task\": \"Deleteの実装\"," +
+                "    \"task\": \"テスト用タスク３\"," +
                 "    \"limitDate\": \"2022-08-30\"" +
                 "}", response, JSONCompareMode.STRICT);
     }
@@ -248,7 +248,7 @@ public class UserRestApiIntegrationTest {
         JSONAssert.assertEquals("{" +
                 "    \"id\": 3," +
                 "    \"done\": false," +
-                "    \"task\": \"Deleteの実装\"," +
+                "    \"task\": \"テスト用タスク３\"," +
                 "    \"limitDate\": \"2022-08-30\"" +
                 "}", response, JSONCompareMode.STRICT);
     }
@@ -256,7 +256,7 @@ public class UserRestApiIntegrationTest {
     @Test
     @DataSet(value = "datasets/to_do_list.yml")
     @Transactional
-    void limitDateに有効な型以外に変更しようとした時にBadRequestが返ってくること() throws Exception{
+    void limitDateを有効な型以外に変更しようとした時にBadRequestが返ってくること() throws Exception{
         try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)) {
             zonedDateTimeMockedStatic.when(ZonedDateTime::now).thenReturn(zonedDateTime);
 
@@ -265,7 +265,7 @@ public class UserRestApiIntegrationTest {
                             .patch("/todos/3")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{" +
-                                    "    \"task\": \"Updateの実装\"," +
+                                    "    \"task\": \"テスト用タスク変更\"," +
                                     "    \"limitDate\": \"aaaa\"" +
                                     "}"))
                     .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -293,8 +293,8 @@ public class UserRestApiIntegrationTest {
                             .patch("/todos/99")
                             .contentType(MediaType.APPLICATION_JSON)
                             .content("{" +
-                                    "    \"task\": \"Updateの実装\"," +
-                                    "    \"limitDate\": \"2022-08-25\"" +
+                                    "    \"task\": \"テスト用タスク３変更\"," +
+                                    "    \"limitDate\": \"2022-09-30\"" +
                                     "}"))
                     .andExpect(MockMvcResultMatchers.status().isNotFound())
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);

@@ -31,9 +31,9 @@ class ToDoRepositoryTest {
         assertThat(actual)
                 .hasSize(3)
                 .contains(
-                        new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022, 8, 10)),
-                        new ToDoRecord(2, false, "Createの実装", LocalDate.of(2022, 8, 20)),
-                        new ToDoRecord(3, false, "Deleteの実装", LocalDate.of(2022, 8, 30))
+                        new ToDoRecord(1, false, "テスト用タスク１", LocalDate.of(2022, 8, 10)),
+                        new ToDoRecord(2, false, "テスト用タスク２", LocalDate.of(2022, 8, 20)),
+                        new ToDoRecord(3, false, "テスト用タスク３", LocalDate.of(2022, 8, 30))
                 );
     }
 
@@ -42,7 +42,7 @@ class ToDoRepositoryTest {
     @Transactional
     void IDを指定して特定のタスク情報が取得できること() {
         Optional<ToDoRecord> actual = toDoRepository.findById(1);
-        assertThat(actual).isEqualTo(Optional.of(new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022, 8, 10))));
+        assertThat(actual).isEqualTo(Optional.of(new ToDoRecord(1, false, "テスト用タスク１", LocalDate.of(2022, 8, 10))));
     }
 
     @Test
@@ -50,7 +50,7 @@ class ToDoRepositoryTest {
     @ExpectedDataSet(value = "datasets/expected_insert_to_do_list.yml", ignoreCols = "id")
     void タスクを新規登録できること() {
                 assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
-                toDoRepository.insert(new ToDoRecord(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+                toDoRepository.insert(new ToDoRecord(4, false, "テスト用タスク４", LocalDate.of(2022, 9, 1)));
     }
 
     @Test
@@ -58,7 +58,7 @@ class ToDoRepositoryTest {
     @ExpectedDataSet(value = "datasets/expected_update_to_do_list.yml", ignoreCols = "id")
     void タスクを変更できること() {
         assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
-        toDoRepository.update(new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+        toDoRepository.update(new ToDoRecord(3, true, "テスト用タスク３変更", LocalDate.of(2022, 9, 30)));
     }
 
     @Test
