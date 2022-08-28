@@ -1,6 +1,5 @@
 package com.raisetech.todo.repository;
 
-import com.raisetech.todo.service.ToDoEntity;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -19,6 +18,21 @@ public interface ToDoRepository {
     @Insert("INSERT INTO to_do_list (is_done, task, limit_date) VALUES (#{done}, #{task}, #{limitDate})")
     void insert(ToDoRecord toDoRecord);
 
-    @Update("UPDATE to_do_list SET task = #{task}, limit_date = #{limitDate} WHERE id = #{id}")
+    @Update("UPDATE to_do_list " +
+            "SET " +
+                "is_done = #{done}, " +
+                "task = " +
+                    "CASE " +
+                        "WHEN #{task} IS NOT NULL " +
+                        "THEN #{task} " +
+                        "ELSE task " +
+                    "END, " +
+                "limit_date = " +
+                    "CASE " +
+                        "WHEN #{limitDate} IS NOT NULL " +
+                        "THEN #{limitDate} " +
+                        "ELSE limit_date " +
+                    "END " +
+            "WHERE id = #{id}")
     void update(ToDoRecord toDoRecord);
 }

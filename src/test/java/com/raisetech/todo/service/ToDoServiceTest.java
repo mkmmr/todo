@@ -32,15 +32,15 @@ class ToDoServiceTest {
     @Test
     void タスク全件を正常に返すこと() {
         List<ToDoEntity>  allTasksEntity = Arrays.asList(
-                new ToDoEntity(1, false, "Readの実装", LocalDate.of(2022, 8, 10)),
-                new ToDoEntity(2, false, "Createの実装", LocalDate.of(2022, 8, 20)),
-                new ToDoEntity(3, false, "Deleteの実装", LocalDate.of(2022, 8, 30))
+                new ToDoEntity(1, false, "テスト用タスク１", LocalDate.of(2022, 8, 10)),
+                new ToDoEntity(2, false, "テスト用タスク２", LocalDate.of(2022, 8, 20)),
+                new ToDoEntity(3, false, "テスト用タスク３", LocalDate.of(2022, 8, 30))
         ) ;
 
         List<ToDoRecord>  allTasksRecord = Arrays.asList(
-                new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022, 8, 10)),
-                new ToDoRecord(2, false, "Createの実装", LocalDate.of(2022, 8, 20)),
-                new ToDoRecord(3, false, "Deleteの実装", LocalDate.of(2022, 8, 30))
+                new ToDoRecord(1, false, "テスト用タスク１", LocalDate.of(2022, 8, 10)),
+                new ToDoRecord(2, false, "テスト用タスク２", LocalDate.of(2022, 8, 20)),
+                new ToDoRecord(3, false, "テスト用タスク３", LocalDate.of(2022, 8, 30))
         ) ;
         doReturn(allTasksRecord).when(toDoRepository).findAllTask();
 
@@ -52,11 +52,11 @@ class ToDoServiceTest {
 
     @Test
     void 存在するタスクのIDを指定したときに正常にタスクが返されること() {
-        doReturn(Optional.of(new ToDoRecord(1, false, "Readの実装", LocalDate.of(2022,8,10))))
+        doReturn(Optional.of(new ToDoRecord(1, false, "テスト用タスク１", LocalDate.of(2022,8,10))))
                 .when(toDoRepository).findById(1);
 
         ToDoEntity actual = toDoService.findById(1);
-        assertThat(actual).isEqualTo(new ToDoEntity(1, false, "Readの実装", LocalDate.of(2022,8,10)));
+        assertThat(actual).isEqualTo(new ToDoEntity(1, false, "テスト用タスク１", LocalDate.of(2022,8,10)));
 
         verify(toDoRepository, times(1)).findById(1);
     }
@@ -74,12 +74,12 @@ class ToDoServiceTest {
     void 新規タスクを追加できること() {
         try (MockedStatic<ToDoRecord> toDoRecordMockedStatic = Mockito.mockStatic(ToDoRecord.class)) {
             toDoRecordMockedStatic
-                    .when(() -> ToDoRecord.newInstance("Updateの実装", LocalDate.of(2022, 8, 25)))
-                    .thenReturn(new ToDoRecord(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+                    .when(() -> ToDoRecord.newInstance("テスト用タスク４", LocalDate.of(2022, 9, 1)))
+                    .thenReturn(new ToDoRecord(4, false, "テスト用タスク４", LocalDate.of(2022, 9, 1)));
             doNothing().when(toDoRepository).insert(any());
 
-            ToDoEntity actual = toDoService.create("Updateの実装", LocalDate.of(2022, 8, 25));
-            assertThat(actual).isEqualTo(new ToDoEntity(4, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+            ToDoEntity actual = toDoService.create("テスト用タスク４", LocalDate.of(2022, 9, 1));
+            assertThat(actual).isEqualTo(new ToDoEntity(4, false, "テスト用タスク４", LocalDate.of(2022, 9, 1)));
 
             verify(toDoRepository, times(1)).insert(any());
         }
@@ -87,27 +87,79 @@ class ToDoServiceTest {
 
     @Test
     void タスクを変更できること() {
-        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "Updateの実装", LocalDate.of(2022,8,25));
-        try (MockedStatic<ToDoRecord> toDoRecordMockedStatic = Mockito.mockStatic(ToDoRecord.class)) {
-            toDoRecordMockedStatic
-                    .when(() -> ToDoRecord.valueOf(3, "Updateの実装", LocalDate.of(2022, 8, 25)))
-                    .thenReturn(toDoRecordMock);
-            doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
-            doNothing().when(toDoRepository).update(any());
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, true, "テスト用タスク３変更", LocalDate.of(2022,9,30));
 
-            ToDoEntity actual = toDoService.update(3, "Updateの実装", LocalDate.of(2022, 8, 25));
-            assertThat(actual).isEqualTo(new ToDoEntity(3, false, "Updateの実装", LocalDate.of(2022, 8, 25)));
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
 
-            verify(toDoRepository, times(1)).findById(anyInt());
-            verify(toDoRepository, times(1)).update(any());
-        }
+        ToDoEntity actual = toDoService.update(3, true, "テスト用タスク３変更", LocalDate.of(2022, 9, 30));
+        assertThat(actual).isEqualTo(new ToDoEntity(3, true, "テスト用タスク３変更", LocalDate.of(2022, 9, 30)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void done以外がnullの時にdoneだけ部分的に変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, true, "テスト用タスク３", LocalDate.of(2022,9,1));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, true, null, null);
+        assertThat(actual).isEqualTo(new ToDoEntity(3, true, "テスト用タスク３", LocalDate.of(2022, 9, 1)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void task以外がnullの時にtaskだけ部分的に変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "テスト用タスク３変更", LocalDate.of(2022,8,30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, null, "テスト用タスク３変更", null);
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "テスト用タスク３変更", LocalDate.of(2022, 8, 30)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void limitDate以外がnullの時にlimitdateだけ部分的に変更できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "テスト用タスク３", LocalDate.of(2022,9, 30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, null, null, LocalDate.of(2022,9, 30));
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "テスト用タスク３", LocalDate.of(2022, 9, 30)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
+    }
+
+    @Test
+    void 部分更新で全ての値がnullの時に何も変更しないこと() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, false, "テスト用タスク３", LocalDate.of(2022,8,30));
+
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).update(any());
+
+        ToDoEntity actual = toDoService.update(3, null, null, null);
+        assertThat(actual).isEqualTo(new ToDoEntity(3, false, "テスト用タスク３", LocalDate.of(2022, 8, 30)));
+
+        verify(toDoRepository, times(2)).findById(anyInt());
+        verify(toDoRepository, times(1)).update(any());
     }
 
     @Test
     void 存在しないタスクを変更しようとしたときに正常に例外が投げられていること() {
         doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
-        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(4, "Updateの実装", LocalDate.of(2022, 8, 30)) );
-        assertThat(e.getMessage()).isEqualTo("タスク (id = 4) は存在しません");
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.update(99, true, "テスト用タスク９９", LocalDate.of(2022, 12, 1)) );
+        assertThat(e.getMessage()).isEqualTo("タスク (id = 99) は存在しません");
 
         verify(toDoRepository, times(1)).findById(anyInt());
     }

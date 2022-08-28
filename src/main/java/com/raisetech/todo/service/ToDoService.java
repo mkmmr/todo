@@ -37,11 +37,18 @@ public class ToDoService {
         return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
     }
 
-    public ToDoEntity update(int id, String task, LocalDate limitDate) {
-        toDoRepository.findById(id)
+    public ToDoEntity update(int id, Boolean done, String task, LocalDate limitDate) {
+        ToDoRecord nowToDoRecord = toDoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
-        var toDoRecord = ToDoRecord.valueOf(id, task, limitDate);
+
+        if (done == null) {
+            done = nowToDoRecord.isDone();
+        }
+
+        var toDoRecord = new ToDoRecord(id, done, task, limitDate);
         toDoRepository.update(toDoRecord);
-        return new ToDoEntity(toDoRecord.getId(), toDoRecord.isDone(), toDoRecord.getTask(), toDoRecord.getLimitDate());
+        return toDoRepository.findById(id)
+                .map(updatedRecord -> new ToDoEntity(id, updatedRecord.isDone(), updatedRecord.getTask(), updatedRecord.getLimitDate()))
+                .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
     }
 }
