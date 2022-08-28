@@ -68,4 +68,13 @@ class ToDoRepositoryTest {
         assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
         toDoRepository.update(new ToDoRecord(3, false, null, null));
     }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @ExpectedDataSet(value = "datasets/expected_delete_to_do_list.yml", ignoreCols = "id")
+    void タスクを削除できること() {
+        assertThat(toDoRepository.findAllTask().size()).isEqualTo(3);
+        toDoRepository.deleteById(3);
+        assertThat(toDoRepository.findAllTask().size()).isEqualTo(2);
+    }
 }
