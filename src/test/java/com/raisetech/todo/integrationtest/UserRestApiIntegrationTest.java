@@ -22,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 @SpringBootTest
@@ -296,6 +297,45 @@ public class UserRestApiIntegrationTest {
                                     "    \"task\": \"テスト用タスク３変更\"," +
                                     "    \"limitDate\": \"2022-09-30\"" +
                                     "}"))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound())
+                    .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+            String expected = "{" +
+                    "    \"error\": \"Not Found\"," +
+                    "    \"status\": \"404\"," +
+                    "    \"timestamp\": \"2022-08-24T00:00+09:00[Asia/Tokyo]\"," +
+                    "    \"path\": \"/todos/99\"," +
+                    "    \"message\": \"タスク (id = 99) は存在しません\"" +
+                    "}";
+
+            JSONAssert.assertEquals(expected, response, JSONCompareMode.STRICT);
+        }
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void タスクを削除できること() throws Exception{
+        String response = mockMvc
+                .perform(MockMvcRequestBuilders
+                        .delete("/todos/3")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
+                .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
+
+        assertThat(response).isEqualTo("");
+    }
+
+    @Test
+    @DataSet(value = "datasets/to_do_list.yml")
+    @Transactional
+    void 存在しないタスクIDを削除しようとした時にNotFoundが返ってくること() throws Exception{
+        try(MockedStatic<ZonedDateTime> zonedDateTimeMockedStatic = Mockito.mockStatic(ZonedDateTime.class)) {
+            zonedDateTimeMockedStatic.when(ZonedDateTime::now).thenReturn(zonedDateTime);
+
+            String response = mockMvc.perform(MockMvcRequestBuilders
+                            .delete("/todos/99")
+                            .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(MockMvcResultMatchers.status().isNotFound())
                     .andReturn().getResponse().getContentAsString(StandardCharsets.UTF_8);
 
