@@ -163,4 +163,25 @@ class ToDoServiceTest {
 
         verify(toDoRepository, times(1)).findById(anyInt());
     }
+
+    @Test
+    void タスクを削除できること() {
+        ToDoRecord toDoRecordMock = new ToDoRecord(3, true, "テスト用タスク３", LocalDate.of(2022,8,30));
+        doReturn(Optional.of(toDoRecordMock)).when(toDoRepository).findById(3);
+        doNothing().when(toDoRepository).deleteById(anyInt());
+
+        toDoService.deleteById(3);
+
+        verify(toDoRepository, times(1)).findById(anyInt());
+        verify(toDoRepository, times(1)).deleteById(anyInt());
+    }
+
+    @Test
+    void 存在しないタスクを削除しようとしたときに正常に例外が投げられていること() {
+        doReturn(Optional.empty()).when(toDoRepository).findById(anyInt());
+        ResourceNotFoundException e = assertThrows(ResourceNotFoundException.class, ()-> toDoService.deleteById(99));
+        assertThat(e.getMessage()).isEqualTo("タスク (id = 99) は存在しません");
+
+        verify(toDoRepository, times(1)).findById(anyInt());
+    }
 }
