@@ -35,4 +35,7 @@ public interface ToDoRepository {
                     "END " +
             "WHERE id = #{id}")
     void update(ToDoRecord toDoRecord);
+
+    @Delete("DELETE FROM to_do_list WHERE id = #{id}")
+    void deleteById(int id);
 }

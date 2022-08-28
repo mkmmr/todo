@@ -40,4 +40,10 @@ public class ToDoController {
         ToDoResponse toDoResponse = new ToDoResponse(id, toDoEntity.getDone(), toDoEntity.getTask(), toDoEntity.getLimitDate());
         return ResponseEntity.ok(toDoResponse);
     }
+
+    @DeleteMapping("/todos/{id}")
+    public ResponseEntity delete(@PathVariable("id") int id){
+        toDoService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

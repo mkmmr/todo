@@ -51,4 +51,10 @@ public class ToDoService {
                 .map(updatedRecord -> new ToDoEntity(id, updatedRecord.isDone(), updatedRecord.getTask(), updatedRecord.getLimitDate()))
                 .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
     }
+
+    public void deleteById(int id) {
+        toDoRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("タスク (id = " + id + ") は存在しません"));
+        toDoRepository.deleteById(id);
+    }
 }
