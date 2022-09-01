@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import java.time.format.DateTimeParseException;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,6 +17,10 @@ class ToDoFormTest {
 
     @InjectMocks
     ToDoForm toDoForm;
+
+    static {
+        Locale.setDefault(Locale.JAPANESE);
+    }
 
     @Test
     void 正しい値を入力した時にバリデーションエラーとならないこと() {
