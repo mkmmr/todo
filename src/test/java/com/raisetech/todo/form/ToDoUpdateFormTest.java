@@ -15,9 +15,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ToDoUpdateFormTest {
 
-    @InjectMocks
-    ToDoUpdateForm toDoUpdateForm;
-
     static {
         Locale.setDefault(Locale.JAPANESE);
     }
