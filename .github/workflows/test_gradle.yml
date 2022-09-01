@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
 
+
 jobs:
   build:
 
@@ -15,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: SetLocale
+      run: |
+        sudo locale-gen ja_JP.UTF-8
+        sudo update-locale LANG=ja_JP.UTF-8
     - name: Up container
       run: docker compose up -d
     - name: Set up JDK 17
@@ -27,3 +32,8 @@ jobs:
       uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
       with:
         arguments: build
+    - name: Publish Test Report
+      uses: mikepenz/action-junit-report@v3
+      if: always() # always run even if the previous step fails
+      with:
+        report_paths: '**/build/test-results/test/TEST-*.xml'
