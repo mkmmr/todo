@@ -8,6 +8,7 @@ on:
 permissions:
   contents: read
 
+
 jobs:
   build:
 
@@ -15,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    - name: SetLocale
+      run: |
+        sudo locale-gen ja_JP.UTF-8
+        sudo update-locale LANG=ja_JP.UTF-8
     - name: Up container
       run: docker compose up -d
     - name: Set up JDK 17
